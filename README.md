@@ -38,4 +38,6 @@ Be patient, the script execution might take some time.
 
 When the script is done, open your favorite browser and go to [https://127.0.0.1:9090]
 
-The credentials for DataPower are - admin:admin.
+The credentials for DataPower are:
+- user: admin
+- password: admin
