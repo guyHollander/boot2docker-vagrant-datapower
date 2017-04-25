@@ -87,4 +87,5 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "boot2docker/bootlocal.sh", run: "always"
   config.vm.provision "shell", inline: "docker pull ibmcom/datapower"
   config.vm.provision "shell", inline: "docker create -it -v /vagrant/config:/drouter/config -v /vagrant/local:/drouter/local -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_INTERACTIVE=true -p 9090:9090 -p 9022:22 -p 5550:5550 -p 5554:5554 -p 8000-8079:8000-8079 --name idg ibmcom/datapower"
+  config.vm.provision "shell", inline: "docker start idg"
 end
