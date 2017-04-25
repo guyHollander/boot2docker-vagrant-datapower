@@ -14,7 +14,7 @@ VAGRANT_B2D_VERSION="17.04.0-ce"
 
 #  B2D VM customization
 VAGRANT_B2D_CPU="2"
-VAGRANT_B2D_MEMORY="3072"
+VAGRANT_B2D_MEMORY="4096"
 
 # B2D environment extension (version related to VAGRANT_B2D_VERSION by default)
 VAGRANT_B2D_EXTENSION_REPO="https://github.com/AlbanMontaigu/boot2docker-vagrant-extension.git"
@@ -66,8 +66,14 @@ Vagrant.configure("2") do |config|
   # -----------------------------------
   config.vm.network "forwarded_port", guest: 22, host: 22, auto_correct: true
   # Put here all the port mapping you want to do between your computer and your boot2docker
-
-
+  config.vm.network "forwarded_port", guest: 9090, host: 9090, auto_correct: true
+  config.vm.network "forwarded_port", guest: 9022, host: 9022, auto_correct: true
+  config.vm.network "forwarded_port", guest: 5550, host: 5550, auto_correct: true
+  config.vm.network "forwarded_port", guest: 5554, host: 5554, auto_correct: true
+  for i in 8000..8079
+    config.vm.network "forwarded_port", guest: i, host: i
+  end
+  
   # -----------------------------------
   # Customization of the OS
   # -----------------------------------
@@ -79,5 +85,6 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "boot2docker/param.sh", :args => [ 'CRON_DK_IBACKUP_STATUS', CRON_DK_IBACKUP_STATUS]
   config.vm.provision "shell", path: "boot2docker/param.sh", :args => [ 'CRON_DK_IBACKUP_TIME', CRON_DK_IBACKUP_TIME]
   config.vm.provision "shell", path: "boot2docker/bootlocal.sh", run: "always"
-
+  config.vm.provision "shell", inline: "docker pull ibmcom/datapower"
+  config.vm.provision "shell", inline: "docker create -it -v $PWD/config:/drouter/config -v $PWD/local:/drouter/local -e DATAPOWER_ACCEPT_LICENSE=true -e DATAPOWER_INTERACTIVE=true -p 9090:9090 -p 9022:22 -p 5550:5550 -p 5554:5554 -p 8000-8079:8000-8079  ibmcom/datapower"
 end
